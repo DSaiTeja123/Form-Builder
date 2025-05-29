@@ -45,6 +45,24 @@ function getDefaultConfig(type) {
         required: false,
         description: "",
       };
+    // ADVANCED FIELDS:
+    case "file":
+      return {
+        label: "File Upload",
+        required: false,
+        accept: "*",
+        description: "",
+      };
+    case "color":
+      return { label: "Color Picker", required: false, description: "" };
+    case "switch":
+      return { label: "Switch", required: false, description: "" };
+    case "time":
+      return { label: "Time Picker", required: false, description: "" };
+    case "section":
+      return { label: "Section Header", text: "Section", description: "" };
+    case "repeater":
+      return { label: "Repeater", fields: [], description: "" };
     default:
       return {};
   }

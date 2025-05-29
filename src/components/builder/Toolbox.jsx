@@ -11,16 +11,12 @@ const BASIC_FIELDS = [
 
 const ADVANCED_FIELDS = [
   { type: "file", label: "File Upload" },
-  { type: "signature", label: "Signature" },
   { type: "slider", label: "Slider" },
-  { type: "rating", label: "Rating" },
   { type: "color", label: "Color Picker" },
   { type: "switch", label: "Switch" },
   { type: "time", label: "Time Picker" },
   { type: "section", label: "Section Header" },
   { type: "repeater", label: "Repeater" },
-  { type: "matrix", label: "Matrix/Grid" },
-  { type: "richtext", label: "Rich Text Editor" },
 ];
 
 export default function Toolbox({ onDragStart }) {

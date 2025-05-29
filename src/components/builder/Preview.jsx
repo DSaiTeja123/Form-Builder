@@ -2,6 +2,7 @@ import React, { useState } from "react";
 import { useForm } from "react-hook-form";
 import Stepper from "../common/Stepper";
 import { toast } from "react-toastify";
+import { useFieldArray } from "react-hook-form";
 
 const PATTERNS = {
   email: {
@@ -40,6 +41,7 @@ export default function Preview({ steps, device, onSubmit: onFinalSubmit }) {
   };
 
   const prevStep = () => setCurrentStep((s) => Math.max(s - 1, 0));
+  const { control } = useForm({ mode: "onChange" });
 
   const submitStep = (data) => {
     if (currentStep === steps.length - 1) {
@@ -216,6 +218,148 @@ export default function Preview({ steps, device, onSubmit: onFinalSubmit }) {
                         </label>
                       ))}
                     </div>
+                    {errorText}
+                  </div>
+                );
+
+              // ADVANCED FIELDS
+              case "file":
+                return (
+                  <div key={idx}>
+                    <label className="block mb-1 text-sm font-medium text-gray-700 dark:text-gray-200">
+                      {config.label}
+                    </label>
+                    <input
+                      type="file"
+                      className={inputClass}
+                      accept={config.accept}
+                      {...register(name, validation)}
+                    />
+                    {errorText}
+                  </div>
+                );
+
+              case "slider":
+                return (
+                  <div key={idx}>
+                    <label className="block mb-1 text-sm font-medium text-gray-700 dark:text-gray-200">
+                      {config.label}
+                    </label>
+                    <div className="flex items-center gap-3">
+                      <input
+                        type="range"
+                        min={config.min}
+                        max={config.max}
+                        step={config.step}
+                        className="w-full"
+                        {...register(name, validation)}
+                        defaultValue={config.min}
+                        onInput={(e) => {
+                          // react-hook-form handles the value, but force update for dynamic display
+                          e.target.form &&
+                            e.target.form.dispatchEvent(
+                              new Event("input", { bubbles: true })
+                            );
+                        }}
+                      />
+                      <span className="font-mono text-sm">
+                        {getValues(name) ?? config.min}
+                      </span>
+                    </div>
+                    <div className="text-xs text-gray-500 mt-1">
+                      {config.min} - {config.max}
+                    </div>
+                    {errorText}
+                  </div>
+                );
+
+              case "color":
+                return (
+                  <div key={idx}>
+                    <label className="block mb-1 text-sm font-medium text-gray-700 dark:text-gray-200">
+                      {config.label}
+                    </label>
+                    <input
+                      type="color"
+                      className="w-12 h-8 p-0 border-none"
+                      {...register(name, validation)}
+                    />
+                  </div>
+                );
+
+              case "switch":
+                return (
+                  <div key={idx} className="flex items-center mb-2">
+                    <label className="mr-2 text-sm font-medium text-gray-700 dark:text-gray-200">
+                      {config.label}
+                    </label>
+                    <input type="checkbox" {...register(name, validation)} />
+                  </div>
+                );
+
+              case "time":
+                return (
+                  <div key={idx}>
+                    <label className="block mb-1 text-sm font-medium text-gray-700 dark:text-gray-200">
+                      {config.label}
+                    </label>
+                    <input
+                      type="time"
+                      className={inputClass}
+                      {...register(name, validation)}
+                    />
+                  </div>
+                );
+
+              case "section":
+                return (
+                  <div key={idx}>
+                    <h4 className="text-lg font-bold text-indigo-700 dark:text-indigo-200">
+                      {config.text || config.label}
+                    </h4>
+                  </div>
+                );
+
+              case "repeater":
+                const repeaterName = name;
+                const { fields, append, remove } = useFieldArray({
+                  control,
+                  name: repeaterName,
+                });
+                return (
+                  <div key={idx}>
+                    <label className="block mb-1 text-sm font-medium text-gray-700 dark:text-gray-200">
+                      {config.label}
+                    </label>
+                    {fields.map((item, repIdx) => (
+                      <div
+                        key={item.id}
+                        className="flex gap-2 items-center mb-2"
+                      >
+                        <input
+                          className={inputClass}
+                          {...register(
+                            `${repeaterName}.${repIdx}.value`,
+                            validation
+                          )}
+                          placeholder={`Item ${repIdx + 1}`}
+                        />
+                        <button
+                          type="button"
+                          className="text-red-500 text-xs"
+                          onClick={() => remove(repIdx)}
+                        >
+                          Remove
+                        </button>
+                      </div>
+                    ))}
+                    <button
+                      type="button"
+                      className="btn-secondary text-xs"
+                      onClick={() => append({ value: "" })}
+                    >
+                      Add Item
+                    </button>
                     {errorText}
                   </div>
                 );

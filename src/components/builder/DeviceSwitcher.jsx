@@ -11,12 +11,12 @@ export default function DeviceSwitcher({ device, onSwitch }) {
   const { theme } = useTheme();
 
   return (
-    <div className="flex gap-4 justify-center items-center p-3 bg-white dark:bg-gray-800 rounded-2xl shadow-lg border border-gray-200 dark:border-gray-700 transition-all duration-500">
+    <div className="flex gap-4 justify-center items-center p-3 bg-white dark:bg-gray-800 rounded-2xl shadow-lg border border-gray-200 dark:border-gray-700 transition-all duration-500 cursor-pointer">
       {DEVICES.map(({ key, label }) => (
         <button
           key={key}
           type="button"
-          className={`px-5 py-2 rounded-lg font-semibold text-sm transition-all duration-500 ease-in-out
+          className={`px-5 py-2 rounded-lg font-semibold text-sm transition-all duration-500 ease-in-out cursor-pointer
             ${
               device === key
                 ? "bg-indigo-600 text-white shadow-md scale-110 ring-2 ring-indigo-400"

@@ -17,13 +17,13 @@ export default function Navbar() {
   };
 
   return (
-    <nav className="flex items-center justify-between px-6 py-3 bg-white dark:bg-gray-900 shadow transition-all duration-500">
+    <nav className="flex items-center justify-between px-6 py-5 bg-white dark:bg-gray-900 shadow transition-all duration-500">
       <div
         role="button"
         tabIndex={0}
         onClick={() => navigate("/")}
         onKeyDown={onLogoKeyDown}
-        className="font-bold text-xl text-indigo-700 dark:text-indigo-300 cursor-pointer transition-all duration-500 select-none"
+        className="font-bold text-4xl text-indigo-700 dark:text-indigo-300 cursor-pointer transition-all duration-500 select-none"
         aria-label="Go to homepage"
         title="Go to homepage"
       >
@@ -34,7 +34,7 @@ export default function Navbar() {
           onClick={toggleTheme}
           title="Toggle dark/light mode"
           aria-label="Toggle dark or light theme"
-          className="text-xl"
+          className="text-xl cursor-pointer"
         >
           {theme === "dark" ? "🌙" : "☀️"}
         </button>
@@ -43,13 +43,13 @@ export default function Navbar() {
           <>
             <button
               onClick={() => navigate("/login")}
-              className="text-indigo-600 dark:text-indigo-300 hover:underline"
+              className="text-indigo-600 dark:text-indigo-300 hover:underline cursor-pointer"
             >
               Login
             </button>
             <button
               onClick={() => navigate("/register")}
-              className="text-indigo-600 dark:text-indigo-300 hover:underline"
+              className="text-indigo-600 dark:text-indigo-300 hover:underline cursor-pointer"
             >
               Register
             </button>
@@ -58,13 +58,13 @@ export default function Navbar() {
           <>
             <button
               onClick={() => navigate("/views")}
-              className="text-indigo-600 dark:text-indigo-300 hover:underline"
+              className="text-indigo-600 dark:text-indigo-300 hover:underline cursor-pointer"
             >
               Views
             </button>
             <button
               onClick={() => navigate("/my-forms")}
-              className="text-indigo-600 dark:text-indigo-300 hover:underline"
+              className="text-indigo-600 dark:text-indigo-300 hover:underline cursor-pointer"
             >
               My Forms
             </button>
@@ -73,7 +73,7 @@ export default function Navbar() {
                 logout();
                 navigate("/");
               }}
-              className="text-indigo-600 dark:text-indigo-300 hover:underline"
+              className="text-indigo-600 dark:text-indigo-300 hover:underline cursor-pointer"
             >
               Logout
             </button>

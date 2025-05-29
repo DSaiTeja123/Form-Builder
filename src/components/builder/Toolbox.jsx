@@ -46,7 +46,7 @@ export default function Toolbox({ onDragStart }) {
       </div>
 
       <button
-        className="mt-6 w-full px-4 py-2 rounded-lg text-sm font-medium text-indigo-600 dark:text-indigo-300 border border-indigo-500 hover:bg-indigo-50 dark:hover:bg-indigo-800 transition-all duration-500"
+        className="mt-6 w-full px-4 py-2 rounded-lg text-sm font-medium text-indigo-600 dark:text-indigo-300 border border-indigo-500 hover:bg-indigo-50 dark:hover:bg-indigo-800 transition-all duration-500 cursor-pointer"
         onClick={() => setShowAdvanced((a) => !a)}
       >
         {showAdvanced ? "Hide Advanced Features" : "Show Advanced Features"}

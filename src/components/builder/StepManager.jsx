@@ -31,7 +31,7 @@ export default function StepManager({
 
           <button
             onClick={() => setActiveStep(idx)}
-            className="text-xs text-indigo-600 hover:underline dark:text-indigo-300"
+            className="text-xs text-indigo-600 hover:underline dark:text-indigo-300 cursor-pointer"
           >
             Edit
           </button>
@@ -39,7 +39,7 @@ export default function StepManager({
           {steps.length > 1 && (
             <button
               onClick={() => removeStep(idx)}
-              className="text-xs text-red-500 hover:text-red-600 dark:text-red-400 dark:hover:text-red-300"
+              className="text-xs text-red-500 hover:text-red-600 dark:text-red-400 dark:hover:text-red-300 cursor-pointer"
             >
               Remove
             </button>
@@ -49,7 +49,7 @@ export default function StepManager({
 
       <button
         onClick={addStep}
-        className="flex items-center gap-2 px-4 py-2 rounded-xl bg-indigo-600 text-white font-medium text-sm hover:bg-indigo-700 dark:bg-indigo-500 dark:hover:bg-indigo-400 transition-all duration-500 shadow"
+        className="flex items-center gap-2 px-4 py-2 rounded-xl bg-indigo-600 text-white font-medium text-sm hover:bg-indigo-700 dark:bg-indigo-500 dark:hover:bg-indigo-400 transition-all duration-500 shadow cursor-pointer"
       >
         + Add Step
       </button>

@@ -3,7 +3,6 @@ import { useForm } from "react-hook-form";
 import Stepper from "../common/Stepper";
 import { toast } from "react-toastify";
 
-// Patterns for common types
 const PATTERNS = {
   email: {
     value: /^[^\s@]+@[^\s@]+\.[^\s@]+$/,
@@ -54,6 +53,9 @@ export default function Preview({ steps, device, onSubmit: onFinalSubmit }) {
     }
   };
 
+  const inputClass =
+    "w-full px-4 py-2 mt-1 bg-white dark:bg-gray-800 text-gray-800 dark:text-gray-100 border border-gray-300 dark:border-gray-600 rounded-md shadow-sm focus:outline-none focus:ring-2 focus:ring-indigo-500 transition";
+
   return (
     <div className="mt-6">
       <div
@@ -73,24 +75,21 @@ export default function Preview({ steps, device, onSubmit: onFinalSubmit }) {
           className="flex flex-col gap-5"
           noValidate
         >
-          {/* Step Indicators */}
           <div className="flex flex-wrap gap-2 mb-6">
             {steps.map((step, idx) => (
               <div
                 key={idx}
-                className={`px-4 py-1 rounded-full text-sm font-medium transition-all duration-500
-                  ${
-                    idx === currentStep
-                      ? "bg-indigo-600 text-white"
-                      : "bg-gray-100 dark:bg-gray-800 text-gray-600 dark:text-gray-300"
-                  }`}
+                className={`px-4 py-1 rounded-full text-sm font-medium transition-all duration-500 ${
+                  idx === currentStep
+                    ? "bg-indigo-600 text-white"
+                    : "bg-gray-100 dark:bg-gray-800 text-gray-600 dark:text-gray-300"
+                }`}
               >
                 {step.stepName || `Step ${idx + 1}`}
               </div>
             ))}
           </div>
 
-          {/* Dynamic Fields */}
           {steps[currentStep].fields.map((field, idx) => {
             const name = `step${currentStep}_field${idx}`;
             const { type, config } = field;
@@ -134,7 +133,7 @@ export default function Preview({ steps, device, onSubmit: onFinalSubmit }) {
                     </label>
                     <input
                       type={type}
-                      className="input"
+                      className={inputClass}
                       placeholder={config.placeholder}
                       {...register(name, validation)}
                       onBlur={() => trigger(name)}
@@ -150,7 +149,7 @@ export default function Preview({ steps, device, onSubmit: onFinalSubmit }) {
                       {config.label}
                     </label>
                     <textarea
-                      className="input"
+                      className={inputClass}
                       placeholder={config.placeholder}
                       {...register(name, validation)}
                       onBlur={() => trigger(name)}
@@ -166,7 +165,7 @@ export default function Preview({ steps, device, onSubmit: onFinalSubmit }) {
                       {config.label}
                     </label>
                     <select
-                      className="input"
+                      className={inputClass}
                       defaultValue=""
                       {...register(name, validation)}
                       onBlur={() => trigger(name)}
@@ -226,17 +225,19 @@ export default function Preview({ steps, device, onSubmit: onFinalSubmit }) {
             }
           })}
 
-          {/* Navigation Buttons */}
           <div className="flex justify-between mt-6">
             <button
               type="button"
               onClick={prevStep}
               disabled={currentStep === 0}
-              className="btn-secondary disabled:opacity-50"
+              className="px-6 py-2 rounded-lg bg-gray-200 dark:bg-gray-700 text-gray-800 dark:text-gray-100 font-medium disabled:opacity-50 transition hover:bg-gray-300 dark:hover:bg-gray-600"
             >
               Previous
             </button>
-            <button type="submit" className="btn-primary">
+            <button
+              type="submit"
+              className="px-6 py-2 rounded-lg bg-indigo-600 text-white font-medium transition hover:bg-indigo-700"
+            >
               {currentStep === steps.length - 1 ? "Submit" : "Next"}
             </button>
           </div>

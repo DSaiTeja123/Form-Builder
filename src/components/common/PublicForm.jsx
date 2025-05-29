@@ -21,15 +21,18 @@ function Stepper({ steps, activeStep }) {
   return (
     <div className="w-full flex items-center mb-8">
       {steps.map((step, idx) => (
-        <div key={idx} className="flex-1 flex flex-col items-center relative transition-all duration-500">
+        <div
+          key={idx}
+          className="flex-1 flex flex-col items-center relative transition-all duration-500"
+        >
           <div
             className={`w-8 h-8 flex items-center justify-center rounded-full border-2 transition-all duration-500
               ${
                 idx < activeStep
                   ? "bg-indigo-500 border-indigo-500 text-white"
                   : idx === activeStep
-                  ? "bg-white border-indigo-500 text-indigo-700 dark:bg-gray-900"
-                  : "bg-white border-slate-300 text-slate-400 dark:bg-gray-900"
+                  ? "bg-white dark:bg-gray-800 border-indigo-500 text-indigo-700 dark:text-indigo-300"
+                  : "bg-white dark:bg-gray-800 border-slate-300 dark:border-slate-700 text-slate-400 dark:text-slate-500"
               }`}
           >
             {idx < activeStep ? "✓" : idx + 1}
@@ -37,7 +40,6 @@ function Stepper({ steps, activeStep }) {
           <span className="mt-2 text-xs text-center text-slate-500 dark:text-slate-400 w-20">
             {step.stepName}
           </span>
-          {/* Connector line between steps */}
           {idx < steps.length - 1 && (
             <div className="absolute top-4 right-0 w-full border-t-2 border-slate-300 dark:border-slate-700 z-[-1]"></div>
           )}
@@ -170,7 +172,7 @@ export default function PublicForm() {
             <>
               <label
                 htmlFor="responderEmail"
-                className="block mb-2 font-medium"
+                className="block mb-2 font-medium text-gray-700 dark:text-gray-200"
               >
                 Your Email (optional):
               </label>
@@ -193,7 +195,7 @@ export default function PublicForm() {
             </>
           )}
           <div className="mb-6">
-            <div className="font-semibold mb-2">
+            <div className="font-semibold mb-2 text-gray-700 dark:text-gray-200">
               {steps[currentStep].stepName}
             </div>
             {stepFields.map((field, fidx) => {
@@ -201,15 +203,20 @@ export default function PublicForm() {
               const { type, config } = field;
               switch (type) {
                 case "text":
+                case "date":
                   return (
                     <div key={fidx} className="mb-2">
-                      <label htmlFor={name} className="block mb-1">
+                      <label
+                        htmlFor={name}
+                        className="block mb-1 text-gray-700 dark:text-gray-200"
+                      >
                         {config.label}
                       </label>
                       <input
                         className="input"
                         id={name}
                         name={name}
+                        type={type}
                         placeholder={config.placeholder}
                         value={formData[name] || ""}
                         onChange={handleChange}
@@ -221,7 +228,10 @@ export default function PublicForm() {
                 case "textarea":
                   return (
                     <div key={fidx} className="mb-2">
-                      <label htmlFor={name} className="block mb-1">
+                      <label
+                        htmlFor={name}
+                        className="block mb-1 text-gray-700 dark:text-gray-200"
+                      >
                         {config.label}
                       </label>
                       <textarea
@@ -239,7 +249,10 @@ export default function PublicForm() {
                 case "dropdown":
                   return (
                     <div key={fidx} className="mb-2">
-                      <label htmlFor={name} className="block mb-1">
+                      <label
+                        htmlFor={name}
+                        className="block mb-1 text-gray-700 dark:text-gray-200"
+                      >
                         {config.label}
                       </label>
                       <select
@@ -264,7 +277,7 @@ export default function PublicForm() {
                   return (
                     <label
                       key={fidx}
-                      className="flex items-center gap-2 mb-2"
+                      className="flex items-center gap-2 mb-2 text-gray-700 dark:text-gray-200"
                       htmlFor={name}
                     >
                       <input
@@ -278,24 +291,6 @@ export default function PublicForm() {
                       {config.label}
                     </label>
                   );
-                case "date":
-                  return (
-                    <div key={fidx} className="mb-2">
-                      <label htmlFor={name} className="block mb-1">
-                        {config.label}
-                      </label>
-                      <input
-                        className="input"
-                        type="date"
-                        id={name}
-                        name={name}
-                        value={formData[name] || ""}
-                        onChange={handleChange}
-                        required={config.required}
-                        aria-required={config.required}
-                      />
-                    </div>
-                  );
                 case "radio":
                   return (
                     <div
@@ -306,12 +301,15 @@ export default function PublicForm() {
                     >
                       <div
                         id={`${name}-label`}
-                        className="block mb-1 font-medium"
+                        className="block mb-1 font-medium text-gray-700 dark:text-gray-200"
                       >
                         {config.label}
                       </div>
                       {config.options.map((opt, i) => (
-                        <label key={i} className="mr-4">
+                        <label
+                          key={i}
+                          className="mr-4 text-gray-700 dark:text-gray-200"
+                        >
                           <input
                             type="radio"
                             name={name}
@@ -338,7 +336,7 @@ export default function PublicForm() {
               disabled={currentStep === 0}
               className={`btn px-6 py-2 rounded ${
                 currentStep === 0
-                  ? "bg-gray-300 cursor-not-allowed"
+                  ? "bg-gray-300 dark:bg-gray-700 text-gray-600 dark:text-gray-300 cursor-not-allowed"
                   : "bg-indigo-500 text-white hover:bg-indigo-600"
               }`}
             >
@@ -350,7 +348,7 @@ export default function PublicForm() {
               className={`btn px-6 py-2 rounded ${
                 isStepValid
                   ? "bg-indigo-600 text-white hover:bg-indigo-700"
-                  : "bg-indigo-300 cursor-not-allowed"
+                  : "bg-indigo-300 dark:bg-indigo-800 text-white cursor-not-allowed"
               }`}
             >
               {currentStep === steps.length - 1 ? "Submit" : "Next"}

@@ -130,7 +130,10 @@ export default function FormCanvas({
 
       {fields.length === 0 && (
         <div className="text-gray-500 dark:text-gray-400 text-center py-20 border border-dashed border-gray-300 dark:border-gray-600 rounded-lg transition-all duration-500">
-          Drag fields here to build your form
+          Drag fields here to build your form <br />
+          Double-click on a form field to edit its properties in the field
+          settings panel. <br />
+          Double-click the 🗑️ dustbin icon to remove the field.
         </div>
       )}
 

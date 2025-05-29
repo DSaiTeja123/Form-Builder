@@ -8,12 +8,11 @@ export default function ViewsPage({ device, setDevice, steps }) {
 
   return (
     <div className="bg-gradient-to-br from-indigo-100 via-indigo-50 to-white dark:from-gray-900 dark:via-gray-950 dark:to-gray-900 min-h-screen">
-      {/* Navbar full width and sticky */}
+
       <header className="fixed top-0 left-0 w-full bg-white dark:bg-gray-900 shadow-md z-50">
         <Navbar />
       </header>
 
-      {/* Back button top-left, fixed below navbar */}
       <button
         onClick={() => navigate(-1)}
         aria-label="Go back to previous page"

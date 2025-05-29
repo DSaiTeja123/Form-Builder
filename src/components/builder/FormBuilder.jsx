@@ -188,7 +188,7 @@ export default function FormBuilder() {
   return (
     <div className="min-h-screen bg-indigo-50 dark:bg-gray-950 text-gray-800 dark:text-gray-100 transition-all duration-500">
       <Navbar />
-      <div className="mx-auto py-8 px-9">
+      <div className="min-h-screen mx-auto py-8 px-9">
         <div className="flex items-center justify-between mb-4">
           <input
             className="w-1/2 px-3 py-2 text-2xl font-bold bg-white dark:bg-gray-900 border border-gray-300 dark:border-gray-700 rounded shadow-sm focus:outline-none focus:ring-2 focus:ring-indigo-500 transition-all duration-500"
@@ -200,7 +200,7 @@ export default function FormBuilder() {
             {deviceButtons.map((btn) => (
               <button
                 key={btn.type}
-                className={`px-3 py-1 rounded font-semibold transition-all duration-500 text-sm ${
+                className={`px-3 py-1 rounded font-semibold transition-all duration-500 text-sm cursor-pointer ${
                   device === btn.type
                     ? "bg-indigo-600 text-white shadow"
                     : "bg-indigo-100 dark:bg-indigo-900 text-indigo-700 dark:text-indigo-200 hover:bg-indigo-200 dark:hover:bg-indigo-800"
@@ -230,7 +230,7 @@ export default function FormBuilder() {
           <div className="col-span-8 flex flex-col items-center transition-all duration-500">
             <div className="flex justify-center mb-2 gap-2">
               <button
-                className="btn-secondary"
+                className="btn-secondary cursor-pointer"
                 onClick={() =>
                   setCanvasScale((s) => Math.max(minScale, s - step))
                 }
@@ -242,7 +242,7 @@ export default function FormBuilder() {
                 Zoom: {(canvasScale * 100).toFixed(0)}%
               </span>
               <button
-                className="btn-secondary"
+                className="btn-secondary cursor-pointer"
                 onClick={() =>
                   setCanvasScale((s) => Math.min(maxScale, s + step))
                 }
@@ -283,29 +283,40 @@ export default function FormBuilder() {
         </div>
 
         <div className="flex flex-wrap gap-4 mt-5 items-center">
-          <button className="btn-primary" onClick={handleSaveForm}>
+          <button
+            className="bg-indigo-600 text-white hover:bg-indigo-700 dark:hover:bg-indigo-500 px-5 py-2 rounded-xl text-sm font-semibold transition-all shadow-md cursor-pointer"
+            onClick={handleSaveForm}
+          >
             Publish & Get Link
           </button>
-          <button className="btn-secondary" onClick={handleExportExcel}>
+          <button
+            className="bg-gray-200 text-gray-800 hover:bg-gray-300 dark:bg-gray-700 dark:text-gray-100 dark:hover:bg-gray-600 px-5 py-2 rounded-xl text-sm font-semibold transition-all shadow-md cursor-pointer"
+            onClick={handleExportExcel}
+          >
             Download Responses (Excel)
           </button>
+
           {shortening && (
-            <span className="text-gray-500">Shortening link...</span>
+            <span className="text-gray-500 dark:text-gray-400 text-sm animate-pulse">
+              Shortening link...
+            </span>
           )}
+
           {shortLink && (
             <a
               href={shortLink}
-              className="text-indigo-600 underline break-all"
+              className="text-indigo-600 dark:text-indigo-400 underline break-all text-sm hover:text-indigo-800 dark:hover:text-indigo-300 transition-all"
               target="_blank"
               rel="noopener noreferrer"
             >
               {shortLink}
             </a>
           )}
+
           {!shortLink && shareLink && (
             <a
               href={shareLink}
-              className="text-indigo-600 underline break-all"
+              className="text-indigo-600 dark:text-indigo-400 underline break-all text-sm hover:text-indigo-800 dark:hover:text-indigo-300 transition-all"
               target="_blank"
               rel="noopener noreferrer"
             >

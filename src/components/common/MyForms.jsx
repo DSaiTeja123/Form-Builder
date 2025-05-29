@@ -1,11 +1,9 @@
 import React, { useEffect, useState, useCallback } from "react";
 import { useAuth } from "../../context/AuthContext";
 import { useNavigate } from "react-router-dom";
-import * as XLSX from "xlsx";
 import { toast } from "react-toastify";
-import { Moon, Sun } from "lucide-react";
+import { exportToExcel } from "../../utils/exportExcel";
 
-// Helpers
 function getAllForms(userEmail) {
   const forms = [];
   for (const key in localStorage) {
@@ -23,17 +21,6 @@ function getAllForms(userEmail) {
 
 function getResponses(formId) {
   return JSON.parse(localStorage.getItem(`responses_${formId}`) || "[]");
-}
-
-function exportToExcel(responses, formName = "responses") {
-  if (!responses.length) {
-    toast.info("No responses yet for this form.");
-    return;
-  }
-  const worksheet = XLSX.utils.json_to_sheet(responses);
-  const workbook = XLSX.utils.book_new();
-  XLSX.utils.book_append_sheet(workbook, worksheet, "Responses");
-  XLSX.writeFile(workbook, `${formName}.xlsx`);
 }
 
 function deleteForm(formId) {
@@ -114,6 +101,17 @@ export default function MyForms() {
     });
   };
 
+  // Updated handler: load form definition and responses, use exportToExcel utility
+  const handleExportExcel = (formId, formTitle) => {
+    const form = JSON.parse(localStorage.getItem(`form_${formId}`));
+    const responses = getResponses(formId);
+    if (!responses.length) {
+      toast.info("No responses yet for this form.");
+      return;
+    }
+    exportToExcel(responses, form, formTitle || "responses");
+  };
+
   return (
     <div className="min-h-screen max-w-a mx-auto p-6 bg-blue-950">
       <div className="flex items-center justify-between mb-6">
@@ -166,12 +164,7 @@ export default function MyForms() {
                 </button>
                 <button
                   className="btn-secondary"
-                  onClick={() =>
-                    exportToExcel(
-                      getResponses(form.id),
-                      form.title || "responses"
-                    )
-                  }
+                  onClick={() => handleExportExcel(form.id, form.title)}
                 >
                   Download Responses
                 </button>

@@ -8,9 +8,12 @@ export default function Input({
   ...props
 }) {
   return (
-    <div className="mb-4">
+    <div className="mb-4 w-full max-w-full sm:max-w-md md:max-w-lg lg:max-w-xl">
       {label && (
-        <label className="block mb-1 text-sm font-semibold text-gray-700 dark:text-gray-200">
+        <label
+          htmlFor={props.id}
+          className="block mb-1 text-sm font-semibold text-gray-700 dark:text-gray-200"
+        >
           {label}
         </label>
       )}

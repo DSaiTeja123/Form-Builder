@@ -19,11 +19,11 @@ function saveResponse(formId, response) {
 
 function Stepper({ steps, activeStep }) {
   return (
-    <div className="w-full flex items-center mb-8">
+    <div className="w-full flex items-center mb-8 overflow-x-auto no-scrollbar">
       {steps.map((step, idx) => (
         <div
           key={idx}
-          className="flex-1 flex flex-col items-center relative transition-all duration-500"
+          className="flex-1 flex flex-col items-center relative min-w-[50px] sm:min-w-[70px] transition-all duration-500"
         >
           <div
             className={`w-8 h-8 flex items-center justify-center rounded-full border-2 transition-all duration-500
@@ -37,7 +37,7 @@ function Stepper({ steps, activeStep }) {
           >
             {idx < activeStep ? "✓" : idx + 1}
           </div>
-          <span className="mt-2 text-xs text-center text-slate-500 dark:text-slate-400 w-20">
+          <span className="mt-2 text-xs sm:text-sm text-center text-slate-500 dark:text-slate-400 w-20 truncate">
             {step.stepName}
           </span>
           {idx < steps.length - 1 && (
@@ -68,12 +68,10 @@ export default function PublicForm() {
     }
   }, [formId]);
 
-  // Persist formData on change (optional)
   useEffect(() => {
     localStorage.setItem(`form_data_${formId}`, JSON.stringify(formData));
   }, [formData, formId]);
 
-  // Load persisted formData on mount
   useEffect(() => {
     const savedData = localStorage.getItem(`form_data_${formId}`);
     if (savedData) {
@@ -88,8 +86,8 @@ export default function PublicForm() {
 
   if (isClosed)
     return (
-      <div className="min-h-screen flex items-center justify-center bg-indigo-50 dark:bg-gray-950 transition-all duration-500">
-        <div className="bg-white dark:bg-gray-900 rounded-lg shadow p-8 text-center">
+      <div className="min-h-screen flex items-center justify-center bg-indigo-50 dark:bg-gray-950 transition-all duration-500 p-4">
+        <div className="bg-white dark:bg-gray-900 rounded-lg shadow p-8 text-center max-w-sm w-full">
           <h2 className="text-2xl font-bold mb-4 text-indigo-700 dark:text-indigo-300">
             Form Closed
           </h2>
@@ -102,8 +100,8 @@ export default function PublicForm() {
 
   if (alreadySubmitted)
     return (
-      <div className="min-h-screen flex items-center justify-center bg-indigo-50 dark:bg-gray-950 transition-all duration-500">
-        <div className="bg-white dark:bg-gray-900 rounded-lg shadow p-8 text-center">
+      <div className="min-h-screen flex items-center justify-center bg-indigo-50 dark:bg-gray-950 transition-all duration-500 p-4">
+        <div className="bg-white dark:bg-gray-900 rounded-lg shadow p-8 text-center max-w-sm w-full">
           <h2 className="text-2xl font-bold mb-4 text-indigo-700 dark:text-indigo-300">
             Thank You!
           </h2>
@@ -157,8 +155,8 @@ export default function PublicForm() {
 
   return (
     <div className="min-h-screen bg-indigo-50 dark:bg-gray-950 flex flex-col items-center justify-center transition-all duration-500 p-4">
-      <div className="max-w-xl w-full bg-white dark:bg-gray-900 rounded-lg shadow p-6">
-        <h2 className="text-2xl font-bold mb-4 text-indigo-700 dark:text-indigo-300">
+      <div className="max-w-xl w-full bg-white dark:bg-gray-900 rounded-lg shadow p-6 sm:p-8">
+        <h2 className="text-2xl sm:text-3xl font-bold mb-4 text-indigo-700 dark:text-indigo-300 text-center">
           {form.title || "Form"}
         </h2>
         <Stepper steps={steps} activeStep={currentStep} />
@@ -167,6 +165,7 @@ export default function PublicForm() {
             currentStep === steps.length - 1 ? handleSubmit : handleNext
           }
           aria-label="Public form submission"
+          className="space-y-6"
         >
           {currentStep === 0 && (
             <>
@@ -177,7 +176,7 @@ export default function PublicForm() {
                 Your Email (optional):
               </label>
               <input
-                className="input mb-4"
+                className="input w-full"
                 type="email"
                 id="responderEmail"
                 name="responderEmail"
@@ -188,14 +187,14 @@ export default function PublicForm() {
               />
               <small
                 id="emailHelp"
-                className="block mb-4 text-sm text-slate-500 dark:text-slate-400"
+                className="block text-sm text-slate-500 dark:text-slate-400"
               >
                 We'll never share your email.
               </small>
             </>
           )}
-          <div className="mb-6">
-            <div className="font-semibold mb-2 text-gray-700 dark:text-gray-200">
+          <div>
+            <div className="font-semibold mb-4 text-gray-700 dark:text-gray-200">
               {steps[currentStep].stepName}
             </div>
             {stepFields.map((field, fidx) => {
@@ -205,7 +204,7 @@ export default function PublicForm() {
                 case "text":
                 case "date":
                   return (
-                    <div key={fidx} className="mb-2">
+                    <div key={fidx} className="mb-4">
                       <label
                         htmlFor={name}
                         className="block mb-1 text-gray-700 dark:text-gray-200"
@@ -213,7 +212,7 @@ export default function PublicForm() {
                         {config.label}
                       </label>
                       <input
-                        className="input"
+                        className="input w-full"
                         id={name}
                         name={name}
                         type={type}
@@ -227,7 +226,7 @@ export default function PublicForm() {
                   );
                 case "textarea":
                   return (
-                    <div key={fidx} className="mb-2">
+                    <div key={fidx} className="mb-4">
                       <label
                         htmlFor={name}
                         className="block mb-1 text-gray-700 dark:text-gray-200"
@@ -235,7 +234,7 @@ export default function PublicForm() {
                         {config.label}
                       </label>
                       <textarea
-                        className="input"
+                        className="input w-full"
                         id={name}
                         name={name}
                         placeholder={config.placeholder}
@@ -248,7 +247,7 @@ export default function PublicForm() {
                   );
                 case "dropdown":
                   return (
-                    <div key={fidx} className="mb-2">
+                    <div key={fidx} className="mb-4">
                       <label
                         htmlFor={name}
                         className="block mb-1 text-gray-700 dark:text-gray-200"
@@ -256,7 +255,7 @@ export default function PublicForm() {
                         {config.label}
                       </label>
                       <select
-                        className="input"
+                        className="input w-full"
                         id={name}
                         name={name}
                         value={formData[name] || ""}
@@ -277,7 +276,7 @@ export default function PublicForm() {
                   return (
                     <label
                       key={fidx}
-                      className="flex items-center gap-2 mb-2 text-gray-700 dark:text-gray-200"
+                      className="flex items-center gap-2 mb-4 text-gray-700 dark:text-gray-200"
                       htmlFor={name}
                     >
                       <input
@@ -295,7 +294,7 @@ export default function PublicForm() {
                   return (
                     <div
                       key={fidx}
-                      className="mb-2"
+                      className="mb-4"
                       role="radiogroup"
                       aria-labelledby={`${name}-label`}
                     >
@@ -305,23 +304,25 @@ export default function PublicForm() {
                       >
                         {config.label}
                       </div>
-                      {config.options.map((opt, i) => (
-                        <label
-                          key={i}
-                          className="mr-4 text-gray-700 dark:text-gray-200"
-                        >
-                          <input
-                            type="radio"
-                            name={name}
-                            value={opt}
-                            checked={formData[name] === opt}
-                            onChange={handleChange}
-                            required={config.required}
-                            aria-checked={formData[name] === opt}
-                          />
-                          <span className="ml-1">{opt}</span>
-                        </label>
-                      ))}
+                      <div className="flex flex-wrap gap-4">
+                        {config.options.map((opt, i) => (
+                          <label
+                            key={i}
+                            className="flex items-center gap-1 text-gray-700 dark:text-gray-200"
+                          >
+                            <input
+                              type="radio"
+                              name={name}
+                              value={opt}
+                              checked={formData[name] === opt}
+                              onChange={handleChange}
+                              required={config.required}
+                              aria-checked={formData[name] === opt}
+                            />
+                            <span>{opt}</span>
+                          </label>
+                        ))}
+                      </div>
                     </div>
                   );
                 default:
@@ -329,27 +330,25 @@ export default function PublicForm() {
               }
             })}
           </div>
-          <div className="flex justify-between transition-all duration-500">
-            <button
-              type="button"
-              onClick={handlePrev}
-              disabled={currentStep === 0}
-              className={`btn px-6 py-2 rounded ${
-                currentStep === 0
-                  ? "bg-gray-300 dark:bg-gray-700 text-gray-600 dark:text-gray-300 cursor-not-allowed"
-                  : "bg-indigo-500 text-white hover:bg-indigo-600"
-              }`}
-            >
-              Prev
-            </button>
+
+          <div className="flex flex-col sm:flex-row justify-between items-center gap-4">
+            {currentStep > 0 && (
+              <button
+                type="button"
+                onClick={handlePrev}
+                className="btn-secondary w-full sm:w-auto"
+              >
+                Back
+              </button>
+            )}
             <button
               type="submit"
               disabled={!isStepValid}
-              className={`btn px-6 py-2 rounded ${
-                isStepValid
-                  ? "bg-indigo-600 text-white hover:bg-indigo-700"
-                  : "bg-indigo-300 dark:bg-indigo-800 text-white cursor-not-allowed"
-              }`}
+              className={`btn-primary w-full sm:w-auto ${
+                !isStepValid
+                  ? "opacity-50 cursor-not-allowed"
+                  : "hover:bg-indigo-600 dark:hover:bg-indigo-400"
+              } transition-colors duration-300`}
             >
               {currentStep === steps.length - 1 ? "Submit" : "Next"}
             </button>

@@ -8,25 +8,27 @@ export default function Stepper({ steps, activeStep }) {
   return (
     <div className="mx-auto w-full max-w-3xl px-4 mb-8">
       <div
-        className="relative flex justify-between items-center"
+        className="relative flex justify-between items-center overflow-x-auto no-scrollbar"
         role="progressbar"
         aria-valuemin={1}
         aria-valuemax={totalSteps}
         aria-valuenow={activeStep}
         aria-label="Form progress"
       >
-        
-        <div className="absolute top-1/2 left-0 w-full h-1 bg-slate-200 -translate-y-1/2 z-0"></div>
-        
+        {/* Background bar */}
+        <div className="absolute top-1/2 left-0 w-full h-1 bg-slate-200 -translate-y-1/2 z-0 rounded" />
+
+        {/* Progress fill bar */}
         <div
-          className="absolute top-1/2 left-0 h-1 bg-indigo-500 transition-all duration-500 z-10"
+          className="absolute top-1/2 left-0 h-1 bg-indigo-500 transition-all duration-500 z-10 rounded"
           style={{ width: `${percent}%`, maxWidth: "100%" }}
-        ></div>
-        
+        />
+
+        {/* Step indicators */}
         {steps.map(({ step, label }) => (
           <div
             key={step}
-            className="relative z-20 flex flex-col items-center flex-1"
+            className="relative z-20 flex flex-col items-center flex-shrink-0 min-w-[50px] sm:min-w-[70px]"
           >
             <div
               tabIndex={0}
@@ -47,7 +49,7 @@ export default function Stepper({ steps, activeStep }) {
                 <span className="font-bold">{step}</span>
               )}
             </div>
-            <span className="mt-2 text-xs text-center text-slate-500 dark:text-slate-400 w-20">
+            <span className="mt-2 text-xs sm:text-sm text-center text-slate-500 dark:text-slate-400 w-20 truncate">
               {label}
             </span>
           </div>

@@ -3,7 +3,7 @@ import React from "react";
 export default function FieldConfigPanel({ field, onChange }) {
   if (!field) {
     return (
-      <div className="bg-white dark:bg-gray-900 rounded-lg shadow p-6 min-h-[200px] flex items-center justify-center text-center transition-all duration-500">
+      <div className="bg-white dark:bg-gray-900 rounded-2xl shadow-lg p-6 min-h-[200px] flex items-center justify-center text-center transition-all duration-500">
         <span className="text-gray-400 dark:text-gray-500 text-sm select-none">
           Select a field to configure
         </span>
@@ -17,23 +17,24 @@ export default function FieldConfigPanel({ field, onChange }) {
 
   return (
     <div className="bg-white dark:bg-gray-900 rounded-2xl shadow-lg p-6 border border-gray-200 dark:border-gray-700 transition-all duration-500">
-      <h4 className="font-bold text-lg mb-4 text-indigo-700 dark:text-indigo-300 select-none">
+      <h4 className="font-bold text-lg sm:text-xl mb-5 text-indigo-700 dark:text-indigo-300 select-none text-center sm:text-left">
         Field Settings
       </h4>
+
       <div className="flex flex-col gap-4">
         {/* Label */}
         <input
-          className="input"
+          className="input w-full"
           name="label"
           value={config.label || ""}
           onChange={(e) => onChange({ ...config, label: e.target.value })}
           placeholder="Label"
         />
 
-        {/* Placeholder for text/textarea */}
+        {/* Placeholder */}
         {(type === "text" || type === "textarea") && (
           <input
-            className="input"
+            className="input w-full"
             name="placeholder"
             value={config.placeholder || ""}
             onChange={(e) =>
@@ -43,10 +44,10 @@ export default function FieldConfigPanel({ field, onChange }) {
           />
         )}
 
-        {/* Options for dropdown/radio */}
+        {/* Options */}
         {(type === "dropdown" || type === "radio") && (
           <input
-            className="input"
+            className="input w-full"
             name="options"
             value={config.options ? config.options.join(", ") : ""}
             onChange={(e) =>
@@ -63,7 +64,7 @@ export default function FieldConfigPanel({ field, onChange }) {
         )}
 
         {/* Required checkbox */}
-        <label className="flex items-center gap-3 text-sm font-medium text-gray-700 dark:text-gray-300 cursor-pointer">
+        <label className="flex items-center gap-3 text-sm font-medium text-gray-700 dark:text-gray-300">
           <input
             type="checkbox"
             checked={!!config.required}
@@ -77,9 +78,9 @@ export default function FieldConfigPanel({ field, onChange }) {
 
         {/* Min/Max Length */}
         {(type === "text" || type === "textarea") && (
-          <div className="flex gap-3">
+          <div className="flex flex-col sm:flex-row gap-3">
             <input
-              className="input w-1/2"
+              className="input w-full sm:w-1/2"
               type="number"
               min={0}
               value={config.minLength || ""}
@@ -94,7 +95,7 @@ export default function FieldConfigPanel({ field, onChange }) {
               placeholder="Min Length"
             />
             <input
-              className="input w-1/2"
+              className="input w-full sm:w-1/2"
               type="number"
               min={0}
               value={config.maxLength || ""}
@@ -118,7 +119,7 @@ export default function FieldConfigPanel({ field, onChange }) {
               Pattern
             </label>
             <select
-              className="input mb-2"
+              className="input mb-2 w-full"
               value={patternType}
               onChange={(e) =>
                 onChange({
@@ -134,7 +135,7 @@ export default function FieldConfigPanel({ field, onChange }) {
             </select>
 
             <input
-              className="input"
+              className="input w-full"
               type="text"
               value={pattern}
               onChange={(e) =>
@@ -151,7 +152,7 @@ export default function FieldConfigPanel({ field, onChange }) {
               {patternType === "email" &&
                 "Standard email format will be enforced."}
               {patternType === "phone" &&
-                "Allows 10-15 digit phone numbers (with optional +)."}
+                "Allows 10–15 digit phone numbers (with optional +)."}
               {!patternType && pattern && "Custom regex pattern will be used."}
             </p>
           </div>

@@ -7,7 +7,7 @@ export default function Button({
   ...props
 }) {
   const base =
-    "inline-block px-5 py-2.5 rounded-2xl font-semibold text-sm transition-all duration-200 focus:outline-none focus:ring-2 focus:ring-offset-2 transition-all duration-500";
+    "inline-block px-5 py-2.5 rounded-2xl font-semibold text-sm transition-all duration-200 focus:outline-none focus:ring-2 focus:ring-offset-2 select-none";
 
   const variants = {
     primary:
@@ -20,6 +20,7 @@ export default function Button({
 
   return (
     <button
+      type="button"
       className={`${base} ${variants[variant] || ""} ${className}`}
       {...props}
     >

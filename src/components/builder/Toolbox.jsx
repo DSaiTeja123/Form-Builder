@@ -23,8 +23,8 @@ export default function Toolbox({ onDragStart }) {
   const [showAdvanced, setShowAdvanced] = useState(false);
 
   return (
-    <div className="bg-white dark:bg-gray-900 rounded-xl shadow-lg p-4 transition-all duration-500 border border-gray-200 dark:border-gray-700">
-      <h3 className="text-lg font-semibold text-indigo-700 dark:text-indigo-300 mb-4">
+    <div className="bg-white dark:bg-gray-900 rounded-xl shadow-lg p-4 transition-all duration-500 border border-gray-200 dark:border-gray-700 max-w-full sm:max-w-xs">
+      <h3 className="text-lg font-semibold text-indigo-700 dark:text-indigo-300 mb-4 select-none">
         Fields
       </h3>
 
@@ -34,7 +34,12 @@ export default function Toolbox({ onDragStart }) {
             key={field.type}
             draggable
             onDragStart={(e) => onDragStart(e, field)}
-            className="cursor-grab px-4 py-2 rounded-lg border border-gray-200 dark:border-gray-700 bg-gray-50 dark:bg-gray-800 hover:bg-indigo-50 dark:hover:bg-indigo-800 text-gray-700 dark:text-gray-200 transition-all duration-500"
+            className="cursor-grab px-4 py-2 rounded-lg border border-gray-200 dark:border-gray-700 bg-gray-50 dark:bg-gray-800 hover:bg-indigo-50 dark:hover:bg-indigo-800 text-gray-700 dark:text-gray-200 transition-all duration-300 select-none"
+            role="button"
+            tabIndex={0}
+            onKeyDown={(e) => {
+              if (e.key === "Enter" || e.key === " ") onDragStart(e, field);
+            }}
           >
             {field.label}
           </div>
@@ -42,8 +47,9 @@ export default function Toolbox({ onDragStart }) {
       </div>
 
       <button
-        className="mt-6 w-full px-4 py-2 rounded-lg text-sm font-medium text-indigo-600 dark:text-indigo-300 border border-indigo-500 hover:bg-indigo-50 dark:hover:bg-indigo-800 transition-all duration-500 cursor-pointer"
+        className="mt-6 w-full px-4 py-2 rounded-lg text-sm font-medium text-indigo-600 dark:text-indigo-300 border border-indigo-500 hover:bg-indigo-50 dark:hover:bg-indigo-800 transition-all duration-300 cursor-pointer select-none"
         onClick={() => setShowAdvanced((a) => !a)}
+        type="button"
       >
         {showAdvanced ? "Hide Advanced Features" : "Show Advanced Features"}
       </button>
@@ -55,7 +61,12 @@ export default function Toolbox({ onDragStart }) {
               key={field.type}
               draggable
               onDragStart={(e) => onDragStart(e, field)}
-              className="cursor-grab px-4 py-2 rounded-lg border border-gray-200 dark:border-gray-700 bg-gray-50 dark:bg-gray-800 hover:bg-indigo-50 dark:hover:bg-indigo-800 text-gray-700 dark:text-gray-200 transition-all duration-500"
+              className="cursor-grab px-4 py-2 rounded-lg border border-gray-200 dark:border-gray-700 bg-gray-50 dark:bg-gray-800 hover:bg-indigo-50 dark:hover:bg-indigo-800 text-gray-700 dark:text-gray-200 transition-all duration-300 select-none"
+              role="button"
+              tabIndex={0}
+              onKeyDown={(e) => {
+                if (e.key === "Enter" || e.key === " ") onDragStart(e, field);
+              }}
             >
               {field.label}
             </div>

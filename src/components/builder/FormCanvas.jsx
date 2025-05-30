@@ -35,7 +35,7 @@ function SortableField({
       {...listeners}
       onClick={() => onSelect(idx)}
       tabIndex={0}
-      className={`group relative flex items-center justify-between gap-2 p-4 rounded-lg shadow-sm cursor-pointer border transition-all duration-300
+      className={`group relative flex flex-col sm:flex-row items-start sm:items-center justify-between gap-3 sm:gap-2 p-4 rounded-lg shadow-sm cursor-pointer border transition-all duration-300
         ${
           selectedIdx === idx
             ? "border-indigo-500 bg-indigo-50 dark:bg-indigo-900"
@@ -52,7 +52,7 @@ function SortableField({
         </span>
       </div>
 
-      <div className="flex items-center gap-2">
+      <div className="flex items-center gap-3 self-end sm:self-auto">
         <button
           type="button"
           className="text-red-500 hover:text-red-700 dark:text-red-400 dark:hover:text-red-300 transition"
@@ -120,7 +120,7 @@ export default function FormCanvas({
 
   return (
     <div
-      className="bg-white dark:bg-gray-900 rounded-xl shadow-lg p-4 min-h-[400px] transition-all duration-500 border border-gray-200 dark:border-gray-700"
+      className="bg-white dark:bg-gray-900 rounded-xl shadow-lg p-4 min-h-[400px] transition-all duration-500 border border-gray-200 dark:border-gray-700 w-full"
       onDrop={onDrop}
       onDragOver={onDragOver}
     >
@@ -129,7 +129,7 @@ export default function FormCanvas({
       </h3>
 
       {fields.length === 0 && (
-        <div className="text-gray-500 dark:text-gray-400 text-center py-20 border border-dashed border-gray-300 dark:border-gray-600 rounded-lg transition-all duration-500">
+        <div className="text-gray-500 dark:text-gray-400 text-center py-20 px-4 border border-dashed border-gray-300 dark:border-gray-600 rounded-lg transition-all duration-500 text-sm sm:text-base">
           Drag fields here to build your form <br />
           Double-click on a form field to edit its properties in the field
           settings panel. <br />

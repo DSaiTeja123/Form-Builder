@@ -1,107 +1,81 @@
-Project: FormBuilder
-Abstract
-FormBuilder is a modern, intelligent form creation platform that empowers users to design, publish, and manage custom forms with ease. The system provides a seamless drag-and-drop interface for building forms, supports advanced field types (including file upload, signature pad, sliders, ratings, and more), and enables users to preview forms in multiple device modes. With robust authentication and dynamic theming (dark/light mode), FormBuilder ensures a secure and personalized experience. Built with React.js and Tailwind CSS, the platform leverages local storage for persistence and integrates Excel export functionality for efficient data analysis. FormBuilder bridges the gap between user-friendly form design and powerful data collection, making it ideal for surveys, registrations, feedback, and more.
+# FormBuilder
 
-Features
-Visual Form Builder
-Drag-and-drop interface for adding basic and advanced fields.
+A modern, customizable form builder built with React and Tailwind CSS.  
+**Authenticated users** can visually create, manage, and share forms using a drag-and-drop interface.  
+**Anyone** with a published form link can fill out and submit responses.
 
-Multi-step form creation with customizable step names.
+---
 
-Real-time preview in desktop, tablet, and mobile views.
+## ✨ Features
 
-Advanced Field Types
-File Upload: Accepts user file submissions.
+- **Drag-and-drop form builder** with basic and advanced fields
+- **Multi-step forms** with progress indicator
+- **Dynamic preview** for desktop, tablet, and mobile
+- **Dark/light theme** (Tailwind CSS, system-aware, toggle in UI)
+- **Authentication** (only logged-in users can create/manage forms)
+- **Dynamic Navbar** (shows login/register for guests, form management for users)
+- **Excel export** with user-friendly column names
+- **Client-side routing** (SPA, works on Vercel with `vercel.json`)
+- **Persistent forms and responses** (localStorage)
+- **Advanced fields:** file upload, signature pad, slider, rating, color picker, switch, time picker, section header, repeater, matrix/grid, rich text editor
+- **Responsive design**
 
-Signature Pad: Collects digital signatures.
+---
 
-Slider & Rating: Interactive numeric and star-based inputs.
+## 🚀 Demo
 
-Color Picker, Switch, Time Picker: Modern input controls.
+**Live:** [https://form-builder-omega-one.vercel.app/](https://form-builder-omega-one.vercel.app/)
 
-Repeater & Matrix/Grid: Dynamic lists and tabular inputs.
+---
 
-Rich Text Editor: Supports formatted text responses.
+## 📦 Installation
 
-Section Headers: For clear form organization.
+1. **Clone the repository**
+git clone https://github.com/your-username/form-builder.git
+cd form-builder
 
-Authentication & Access Control
-Only logged-in users can create, edit, or delete forms.
+2. **Install dependencies**
+npm install
 
-Anyone with a published form link can submit responses.
+3. **Start the development server**
+npm run dev
 
-Data Management
-View, manage, and export form responses as Excel files with user-friendly column names.
 
-Persistent storage using browser localStorage.
+4. **Open in your browser:**  
+[http://localhost:5173](http://localhost:5173)
 
-Theming & UI
-Toggle between dark and light modes.
+---
 
-Responsive, accessible design.
+## 🛠️ Usage
 
-Dynamic navbar adapts to authentication state.
+- **Register/Login** to access the form builder.
+- **Create forms** by dragging fields from the toolbox.
+- **Preview** your form in different device modes.
+- **Publish** to get a shareable link.
+- **View responses** and export as Excel.
+- **Anyone** with the link can fill out the form.
 
-Routing & Deployment
-SPA routing with Vercel support (vercel.json included for client-side routing).
+---
 
-Public forms accessible via unique URLs.
+## 🌓 Dark/Light Theme
 
-Technology Stack
-Frontend: React.js, Tailwind CSS, react-hook-form, react-toastify, xlsx, react-signature-canvas
+- Toggle theme using the button in the navbar.
+- Theme preference is saved and respects system defaults.
+- Implemented using Tailwind CSS `darkMode: 'class'`.
 
-State/Context: React Context API for authentication and theming
+---
 
-Persistence: Browser localStorage
+## 🌐 Deployment
 
-Deployment: Vercel (with SPA routing support)
+**Vercel:**  
+- The included `vercel.json` ensures all client-side routes work.
+- Just push to your GitHub repo and import in Vercel.
 
-Project Structure
-text
-src/
-├── components/
-│   ├── builder/         # Form builder and preview components
-│   ├── common/          # Navbar, MyForms, Views, etc.
-│   └── auth/            # Login, Register
-├── context/             # Auth and Theme context
-├── pages/               # Home, etc.
-├── utils/               # Excel export, etc.
-├── App.jsx
-└── index.js
-vercel.json              # SPA routing config for Vercel
-Data Flow & Key Modules
-Form Creation
-Users drag fields from the toolbox into the builder canvas.
+## 🧩 Tech Stack
 
-Each field has customizable configuration (label, options, validation).
-
-Steps and fields are stored in localStorage.
-
-Form Preview & Submission
-Users preview forms in various device modes.
-
-Published forms are accessible to anyone with the link.
-
-Responses are validated and stored locally.
-
-Response Management
-Authenticated users can view and export responses.
-
-Excel export provides readable column headers using field labels.
-
-Theming
-Users can toggle between dark and light mode.
-
-Theme preference is saved and respects system settings.
-
-Example Usage
-Register/Login to access the form builder.
-
-Create a form using drag-and-drop.
-
-Preview and publish the form.
-
-Share the link with others for submissions.
-
-View and export responses as Excel.
-
+- [React](https://react.dev/)
+- [Tailwind CSS](https://tailwindcss.com/)
+- [react-hook-form](https://react-hook-form.com/)
+- [react-signature-canvas](https://www.npmjs.com/package/react-signature-canvas)
+- [react-toastify](https://fkhadra.github.io/react-toastify/)
+- [xlsx](https://github.com/SheetJS/sheetjs)

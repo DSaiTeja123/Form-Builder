@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useState, useMemo, useRef } from "react";
 import { useForm, useFieldArray } from "react-hook-form";
 import Stepper from "../common/Stepper";
 import { toast } from "react-toastify";
@@ -22,14 +22,43 @@ const DEVICE_WIDTHS = {
 
 export default function Preview({ steps, device, onSubmit: onFinalSubmit }) {
   const [currentStep, setCurrentStep] = useState(0);
+
   const {
     register,
     handleSubmit,
     formState: { errors },
     trigger,
     getValues,
+    setValue,
     control,
   } = useForm({ mode: "onChange" });
+
+  // Find all repeater fields and prepare their names
+  const repeaterFields = useMemo(() => {
+    const fields = [];
+    steps.forEach((step, stepIdx) => {
+      step.fields.forEach((field, fieldIdx) => {
+        if (field.type === "repeater") {
+          fields.push({
+            name: `step${stepIdx}_field${fieldIdx}`,
+            stepIdx,
+            fieldIdx,
+          });
+        }
+      });
+    });
+    return fields;
+  }, [steps]);
+
+  // Create useFieldArray instances for all repeaters at the top level
+  const repeaterArrays = {};
+  repeaterFields.forEach((field) => {
+    repeaterArrays[field.name] = useFieldArray({
+      control,
+      name: field.name,
+    });
+  });
+
 
   const nextStep = async () => {
     const valid = await trigger(
@@ -281,6 +310,43 @@ export default function Preview({ steps, device, onSubmit: onFinalSubmit }) {
                     </div>
                   );
 
+                case "rating":
+                  const ratingMax = config.max || 5;
+                  const ratingValue = Number(getValues(name)) || 0;
+                  return (
+                    <div key={idx} className="flex flex-col">
+                      <label className="block mb-1 text-sm font-medium text-gray-700 dark:text-gray-200">
+                        {config.label}
+                      </label>
+                      <div className="flex items-center gap-1">
+                        {[...Array(ratingMax)].map((_, i) => (
+                          <label key={i} className="cursor-pointer">
+                            <input
+                              type="radio"
+                              value={i + 1}
+                              {...register(name, validation)}
+                              className="hidden"
+                            />
+                            <span
+                              className={
+                                ratingValue >= i + 1
+                                  ? "text-yellow-400"
+                                  : "text-gray-300"
+                              }
+                              style={{ fontSize: "1.5rem" }}
+                            >
+                              ★
+                            </span>
+                          </label>
+                        ))}
+                        <span className="ml-2 text-sm text-gray-500">
+                          {ratingValue > 0 ? ratingValue : ""}
+                        </span>
+                      </div>
+                      {errorText}
+                    </div>
+                  );
+
                 case "color":
                   return (
                     <div key={idx} className="flex flex-col items-start">
@@ -332,33 +398,27 @@ export default function Preview({ steps, device, onSubmit: onFinalSubmit }) {
                   );
 
                 case "repeater":
-                  const repeaterName = name;
-                  const { fields, append, remove } = useFieldArray({
-                    control,
-                    name: repeaterName,
-                  });
+                  // Use the pre-created field array instead of creating it here
+                  const repeaterArray = repeaterArrays[name];
                   return (
                     <div key={idx} className="col-span-1 sm:col-span-2">
                       <label className="block mb-1 text-sm font-medium text-gray-700 dark:text-gray-200">
                         {config.label}
                       </label>
-                      {fields.map((item, repIdx) => (
+                      {repeaterArray.fields.map((item, repIdx) => (
                         <div
                           key={item.id}
                           className="flex flex-wrap gap-2 items-center mb-2"
                         >
                           <input
                             className={`${inputClass} flex-grow min-w-[150px]`}
-                            {...register(
-                              `${repeaterName}.${repIdx}.value`,
-                              validation
-                            )}
+                            {...register(`${name}.${repIdx}.value`, validation)}
                             placeholder={`Item ${repIdx + 1}`}
                           />
                           <button
                             type="button"
                             className="text-red-500 text-xs whitespace-nowrap"
-                            onClick={() => remove(repIdx)}
+                            onClick={() => repeaterArray.remove(repIdx)}
                           >
                             Remove
                           </button>
@@ -367,11 +427,114 @@ export default function Preview({ steps, device, onSubmit: onFinalSubmit }) {
                       <button
                         type="button"
                         className="btn-secondary text-xs px-3 py-1 rounded bg-gray-200 dark:bg-gray-700 hover:bg-gray-300 dark:hover:bg-gray-600 transition"
-                        onClick={() => append({ value: "" })}
+                        onClick={() => repeaterArray.append({ value: "" })}
                       >
                         Add Item
                       </button>
                       {errorText}
+                    </div>
+                  );
+
+                case "signature":
+                  // Use a ref for each signature field
+                  if (!signatureRefs.current[name]) {
+                    signatureRefs.current[name] = React.createRef();
+                  }
+                  return (
+                    <div
+                      key={idx}
+                      className="flex flex-col col-span-1 sm:col-span-2"
+                    >
+                      <label className="block mb-1 text-sm font-medium text-gray-700 dark:text-gray-200">
+                        {config.label}
+                      </label>
+                      <div className="border border-gray-300 bg-white dark:bg-gray-800 rounded">
+                        <SignaturePad
+                          ref={signatureRefs.current[name]}
+                          penColor="black"
+                          backgroundColor="rgba(255,255,255,0)"
+                          canvasProps={{
+                            width: 350,
+                            height: 120,
+                            className: "rounded bg-white dark:bg-gray-800",
+                          }}
+                          onEnd={() => {
+                            const dataURL = signatureRefs.current[name]?.current
+                              ?.getTrimmedCanvas()
+                              .toDataURL("image/png");
+                            setValue(name, dataURL, { shouldValidate: true });
+                          }}
+                        />
+                      </div>
+                      <div className="flex gap-2 mt-2">
+                        <button
+                          type="button"
+                          className="btn-secondary text-xs"
+                          onClick={() => {
+                            signatureRefs.current[name]?.current?.clear();
+                            setValue(name, "", { shouldValidate: true });
+                          }}
+                        >
+                          Clear
+                        </button>
+                      </div>
+                      {errorText}
+                    </div>
+                  );
+
+                case "matrix":
+                  return (
+                    <div key={idx} className="col-span-1 sm:col-span-2">
+                      <label className="block mb-1 text-sm font-medium text-gray-700 dark:text-gray-200">
+                        {config.label}
+                      </label>
+                      <table className="border">
+                        <thead>
+                          <tr>
+                            <th></th>
+                            {config.columns?.map((col, cidx) => (
+                              <th key={cidx} className="border px-2">
+                                {col}
+                              </th>
+                            ))}
+                          </tr>
+                        </thead>
+                        <tbody>
+                          {config.rows?.map((row, ridx) => (
+                            <tr key={ridx}>
+                              <td className="border px-2">{row}</td>
+                              {config.columns?.map((col, cidx) => (
+                                <td key={cidx} className="border px-2">
+                                  <input type="radio" disabled />
+                                </td>
+                              ))}
+                            </tr>
+                          ))}
+                        </tbody>
+                      </table>
+                    </div>
+                  );
+
+                case "richtext":
+                  return (
+                    <div key={idx} className="col-span-1 sm:col-span-2">
+                      <label className="block mb-1 text-sm font-medium text-gray-700 dark:text-gray-200">
+                        {config.label}
+                      </label>
+                      <div
+                        className="border p-2 min-h-[60px] rounded bg-white dark:bg-gray-800"
+                        contentEditable
+                        suppressContentEditableWarning
+                        onBlur={(e) => {
+                          const value = e.currentTarget.innerHTML;
+                          setValue(name, value, { shouldValidate: true });
+                        }}
+                        placeholder="Type here..."
+                        style={{ outline: "none" }}
+                      />
+                      <div className="text-xs text-gray-400 mt-1">
+                        Rich text editing (basic)
+                      </div>
                     </div>
                   );
 

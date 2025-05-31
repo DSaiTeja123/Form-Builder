@@ -1,7 +1,8 @@
-import React, { useState, useEffect } from "react";
-import { useParams, useNavigate } from "react-router-dom";
+import React, { useState, useEffect, useRef } from "react";
+import { useParams } from "react-router-dom";
 import { toast } from "react-toastify";
 
+// Utility functions
 function loadForm(id) {
   try {
     return JSON.parse(localStorage.getItem(`form_${id}`));
@@ -17,6 +18,7 @@ function saveResponse(formId, response) {
   localStorage.setItem(key, JSON.stringify(responses));
 }
 
+// Stepper component
 function Stepper({ steps, activeStep }) {
   return (
     <div className="w-full flex items-center mb-8 overflow-x-auto no-scrollbar">
@@ -51,7 +53,6 @@ function Stepper({ steps, activeStep }) {
 
 export default function PublicForm() {
   const { formId } = useParams();
-  const navigate = useNavigate();
   const form = loadForm(formId);
 
   const [alreadySubmitted, setAlreadySubmitted] = useState(false);
@@ -116,12 +117,43 @@ export default function PublicForm() {
 
   const steps = form.steps;
 
+  // Helper for handling field changes
   const handleChange = (e) => {
     const { name, value, type, checked } = e.target;
     setFormData((prev) => ({
       ...prev,
       [name]: type === "checkbox" ? checked : value,
     }));
+  };
+
+  // For advanced fields (slider, rating, color, etc.)
+  const handleCustomChange = (name, value) => {
+    setFormData((prev) => ({
+      ...prev,
+      [name]: value,
+    }));
+  };
+
+  // For repeater fields
+  const handleRepeaterAdd = (name) => {
+    setFormData((prev) => ({
+      ...prev,
+      [name]: [...(prev[name] || []), ""],
+    }));
+  };
+  const handleRepeaterRemove = (name, idx) => {
+    setFormData((prev) => {
+      const arr = [...(prev[name] || [])];
+      arr.splice(idx, 1);
+      return { ...prev, [name]: arr };
+    });
+  };
+  const handleRepeaterChange = (name, idx, value) => {
+    setFormData((prev) => {
+      const arr = [...(prev[name] || [])];
+      arr[idx] = value;
+      return { ...prev, [name]: arr };
+    });
   };
 
   const handleNext = (e) => {
@@ -148,6 +180,7 @@ export default function PublicForm() {
     const name = `step${currentStep}_field${idx}`;
     if (field.config.required) {
       if (field.type === "checkbox") return !!formData[name];
+      if (field.type === "repeater") return (formData[name] || []).length > 0;
       return formData[name] && formData[name].toString().trim() !== "";
     }
     return true;
@@ -200,6 +233,7 @@ export default function PublicForm() {
             {stepFields.map((field, fidx) => {
               const name = `step${currentStep}_field${fidx}`;
               const { type, config } = field;
+
               switch (type) {
                 case "text":
                 case "date":
@@ -323,6 +357,156 @@ export default function PublicForm() {
                           </label>
                         ))}
                       </div>
+                    </div>
+                  );
+                case "file":
+                  return (
+                    <div key={fidx} className="mb-4">
+                      <label
+                        htmlFor={name}
+                        className="block mb-1 text-gray-700 dark:text-gray-200"
+                      >
+                        {config.label}
+                      </label>
+                      <input
+                        type="file"
+                        id={name}
+                        name={name}
+                        className="input w-full"
+                        accept={config.accept}
+                        onChange={(e) => {
+                          const file = e.target.files[0];
+                          if (file) {
+                            const reader = new FileReader();
+                            reader.onload = (evt) => {
+                              handleCustomChange(name, evt.target.result);
+                            };
+                            reader.readAsDataURL(file);
+                          }
+                        }}
+                        required={config.required}
+                      />
+                      {formData[name] && (
+                        <span className="block text-xs mt-1 text-green-600 dark:text-green-400">
+                          File selected
+                        </span>
+                      )}
+                    </div>
+                  );
+                case "slider":
+                  return (
+                    <div key={fidx} className="mb-4">
+                      <label className="block mb-1 text-gray-700 dark:text-gray-200">
+                        {config.label}
+                      </label>
+                      <div className="flex items-center gap-3">
+                        <input
+                          type="range"
+                          min={config.min}
+                          max={config.max}
+                          step={config.step}
+                          className="w-full"
+                          value={formData[name] || config.min || 0}
+                          onChange={(e) =>
+                            handleCustomChange(name, e.target.value)
+                          }
+                        />
+                        <span className="font-mono text-sm min-w-[2rem] text-center">
+                          {formData[name] ?? config.min}
+                        </span>
+                      </div>
+                      <div className="text-xs text-gray-500 mt-1">
+                        {config.min} - {config.max}
+                      </div>
+                    </div>
+                  );
+                case "color":
+                  return (
+                    <div key={fidx} className="mb-4 flex flex-col items-start">
+                      <label className="block mb-1 text-gray-700 dark:text-gray-200">
+                        {config.label}
+                      </label>
+                      <input
+                        type="color"
+                        className="w-12 h-8 p-0 border-none rounded"
+                        value={formData[name] || "#000000"}
+                        onChange={(e) =>
+                          handleCustomChange(name, e.target.value)
+                        }
+                      />
+                    </div>
+                  );
+                case "switch":
+                  return (
+                    <div key={fidx} className="mb-4 flex items-center">
+                      <label className="mr-2 text-gray-700 dark:text-gray-200">
+                        {config.label}
+                      </label>
+                      <input
+                        type="checkbox"
+                        checked={!!formData[name]}
+                        onChange={(e) =>
+                          handleCustomChange(name, e.target.checked)
+                        }
+                      />
+                    </div>
+                  );
+                case "time":
+                  return (
+                    <div key={fidx} className="mb-4">
+                      <label className="block mb-1 text-gray-700 dark:text-gray-200">
+                        {config.label}
+                      </label>
+                      <input
+                        type="time"
+                        className="input w-full"
+                        value={formData[name] || ""}
+                        onChange={(e) =>
+                          handleCustomChange(name, e.target.value)
+                        }
+                      />
+                    </div>
+                  );
+                case "section":
+                  return (
+                    <div key={fidx} className="mb-4">
+                      <h4 className="text-lg font-bold text-indigo-700 dark:text-indigo-200">
+                        {config.text || config.label}
+                      </h4>
+                    </div>
+                  );
+                case "repeater":
+                  return (
+                    <div key={fidx} className="mb-4">
+                      <label className="block mb-1 text-gray-700 dark:text-gray-200">
+                        {config.label}
+                      </label>
+                      {(formData[name] || []).map((item, idx) => (
+                        <div key={idx} className="flex gap-2 mb-2">
+                          <input
+                            className="input flex-grow"
+                            value={item}
+                            onChange={(e) =>
+                              handleRepeaterChange(name, idx, e.target.value)
+                            }
+                            placeholder={`Item ${idx + 1}`}
+                          />
+                          <button
+                            type="button"
+                            className="text-red-500 text-xs"
+                            onClick={() => handleRepeaterRemove(name, idx)}
+                          >
+                            Remove
+                          </button>
+                        </div>
+                      ))}
+                      <button
+                        type="button"
+                        className="btn-secondary text-xs px-3 py-1 rounded bg-gray-200 dark:bg-gray-700 hover:bg-gray-300 dark:hover:bg-gray-600 transition"
+                        onClick={() => handleRepeaterAdd(name)}
+                      >
+                        Add Item
+                      </button>
                     </div>
                   );
                 default:

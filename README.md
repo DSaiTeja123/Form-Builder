@@ -35,11 +35,14 @@ git clone https://github.com/your-username/form-builder.git
 cd form-builder
 
 2. **Install dependencies**
+```bash
 npm install
+```
 
 3. **Start the development server**
+```bash
 npm run dev
-
+```
 
 4. **Open in your browser:**  
 [http://localhost:5173](http://localhost:5173)
